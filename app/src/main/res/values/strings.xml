@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RoomieApp</string>
+    <string-array name="status_array">
+        <item>Kalacak Ev/Oda arıyor</item>
+        <item>Ev/Oda arkadaşı arıyor</item>
+        <item>Aramıyor</item>
+    </string-array>
+</resources>
