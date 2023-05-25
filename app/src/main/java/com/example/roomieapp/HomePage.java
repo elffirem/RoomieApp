@@ -45,6 +45,21 @@ public class HomePage extends AppCompatActivity {
         distanceEditText = findViewById(R.id.distanceEditText);
         filterButton = findViewById(R.id.filterButton);
         cancelButton = findViewById(R.id.cancelButton);
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(new OnCompleteListener<String>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<String> task) {
+//                        if (!task.isSuccessful()) {
+//                            System.out.println( "Fetching FCM registration token failed");
+//                            return;
+//                        }
+//
+//                        // Get new FCM registration token
+//                        String token = task.getResult();
+//                        System.out.println("TOKEN: "+token);
+//
+//                    }
+//                });
 
         filterButton.setOnClickListener(view -> {
             String duration = durationEditText.getText().toString().trim();

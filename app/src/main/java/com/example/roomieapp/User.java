@@ -1,5 +1,11 @@
 package com.example.roomieapp;
 
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Color;
+
+import androidx.core.app.NotificationCompat;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -16,6 +22,20 @@ public class User implements Serializable {
         this.email=email;
         this.UID=UID;
 
+    }
+    public void sendMatchRequestNotification(Context context) {
+        String title = "Eşleşme İsteği";
+        String body = "Bir eşleşme isteği aldınız.";
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "channel_id")
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.drawable.notification)
+                .setColor(Color.parseColor("#DAA520")); // cream_dark renk koduna karşılık gelen hexadecimal değeri kullanın
+
+        // Bildirimi gönderme
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, builder.build());
     }
     public void UpdateUser(String name,String department,String studentClass,String distance,String duration,String status,String contact,String photoUrl){
         isUserUpdated=true;

@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                                         else{
                                             Toast.makeText(LoginActivity.this,"\n" +
                                                     "You cannot log in because your e-mail has not been verified. Please check your e-mail account",Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(LoginActivity.this, ProfileSettings.class));
+                                            startActivity(new Intent(LoginActivity.this, HomePage.class));
                                             finish();
                                         }
                                     } else {
