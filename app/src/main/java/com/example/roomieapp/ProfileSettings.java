@@ -78,7 +78,7 @@ public class ProfileSettings extends AppCompatActivity {
         setContentView(R.layout.activity_profile_settings);
         auth=FirebaseAuth.getInstance();
         currentUser=auth.getCurrentUser();
-        user = new User(currentUser.getEmail(), currentUser.getUid() );
+        user = (User) getIntent().getSerializableExtra("user");
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();

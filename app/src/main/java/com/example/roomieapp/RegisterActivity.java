@@ -31,11 +31,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
-            Toast.makeText(getApplicationContext(),"Zaten giris yapilmisolacak ", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getApplicationContext(),"Zaten giris yapilmis", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -82,10 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                     else{
                         Toast.makeText(getApplicationContext(),"Sifreler Uyusmuyor",Toast.LENGTH_SHORT).show();
                     }
-
                 }
-
-
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -153,5 +148,4 @@ public class RegisterActivity extends AppCompatActivity {
 
         return email.endsWith(emailSuffix);
     }
-
 }

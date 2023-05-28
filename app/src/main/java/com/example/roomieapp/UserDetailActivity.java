@@ -44,6 +44,7 @@ public class UserDetailActivity extends AppCompatActivity {
             userStatusTextView.setText(selectedUser.getStatus());
             userContactTextView.setText(selectedUser.getContact());
 
+
             // Fotoğraf URL'sini kullanarak profil resmini yükleme
             String photoUrl = selectedUser.getPhotoUrl();
             if (photoUrl != null && !photoUrl.isEmpty()) {
@@ -65,7 +66,6 @@ public class UserDetailActivity extends AppCompatActivity {
 
     // Eşleşme isteği gönderme işlemini gerçekleştir
     private void sendMatchRequest() {
-        FCMSend.pushNotification(UserDetailActivity.this,"engNqbbdSxiLhJMBJf33qK:APA91bER6WyvouOQ6PfUWN25ZSrbw3zTHy_OnwurfANeIbjzgPdgai61yrIZ_gl_XZpvO-LeECAol9b6d9eS7luIaz-sQEC9shmu7qlw-otEE70eESrruf0WFnVhlCrBSVbLdvoaaP_n","Hello","Hello World message");
-
+        FCMSend.pushNotification(UserDetailActivity.this, "engNqbbdSxiLhJMBJf33qK:APA91bER6WyvouOQ6PfUWN25ZSrbw3zTHy_OnwurfANeIbjzgPdgai61yrIZ_gl_XZpvO-LeECAol9b6d9eS7luIaz-sQEC9shmu7qlw-otEE70eESrruf0WFnVhlCrBSVbLdvoaaP_n", "Hello", "Hello World message");
     }
 }
