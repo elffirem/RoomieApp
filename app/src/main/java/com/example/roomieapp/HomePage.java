@@ -2,6 +2,7 @@ package com.example.roomieapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -27,6 +29,7 @@ public class HomePage extends AppCompatActivity {
     private List<User> userList, filteredList;
     private EditText durationEditText, distanceEditText;
     private Button filterButton, cancelButton;
+    String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,15 @@ public class HomePage extends AppCompatActivity {
         userList = new ArrayList<>();
         filteredList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            // The user is signed in
+             currentUserID = currentUser.getUid(); // get current user id
+        } else {
+            // No user is signed in
+        }
+
 
         durationEditText = findViewById(R.id.durationEditText);
         distanceEditText = findViewById(R.id.distanceEditText);
@@ -84,7 +96,11 @@ public class HomePage extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             User user = document.toObject(User.class);
-                            userList.add(user);
+                            Log.d("currentId",currentUserID);
+                            Log.d("userId",user.getUid());
+                            if(user!=null && currentUser!=null && !user.getUid().equals(currentUserID)){
+                                userList.add(user);
+                            }
                         }
                         ProfileAdapter adapter = new ProfileAdapter(userList);
                         recyclerView.setAdapter(adapter);
@@ -101,8 +117,10 @@ public class HomePage extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.notification) {
-            // Bildirim öğesine tıklandığında yapılacak işlemler
+            Intent intent = new Intent(this, NotificationActivity.class);
+            startActivity(intent);
             return true;
+
         } else if (id == R.id.logout) {
             // Çıkış öğesine tıklandığında yapılacak işlemler
             logout();

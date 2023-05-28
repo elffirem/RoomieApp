@@ -2,6 +2,7 @@ package com.example.roomieapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,21 +10,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth auth;
-    FirebaseFirestore db ;
+    FirebaseFirestore db;
     private EditText registerEmail, registerPassword, registerPasswordConfirm;
     private Button registerButton;
     private TextView goLogin;
@@ -33,18 +29,16 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
-            Toast.makeText(getApplicationContext(),"Zaten giris yapilmis", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Zaten giris yapilmis", Toast.LENGTH_SHORT).show();
         }
-
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         auth = FirebaseAuth.getInstance();
-        db= FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
         registerEmail = findViewById(R.id.registerEmail);
@@ -52,100 +46,67 @@ public class RegisterActivity extends AppCompatActivity {
         registerPasswordConfirm = findViewById(R.id.registerPasswordConfirm);
         registerButton = findViewById(R.id.registerButton);
         goLogin = findViewById(R.id.goLogin);
-        goLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Login sayfasına geçiş yap
 
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish(); // Register sayfasını kapat
-            }
+        goLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Kayıt işlemlerini gerçekleştir
+        registerButton.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            String mail = registerEmail.getText().toString();
+            String password = registerPassword.getText().toString();
+            String confirmPass = registerPasswordConfirm.getText().toString();
 
-                progressBar.setVisibility(View.VISIBLE);
-                if(registerPassword.getText().toString().isEmpty()||registerPasswordConfirm.getText().toString().isEmpty()||registerEmail.getText().toString().isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Lutfen tum bosluklari doldurun!",Toast.LENGTH_SHORT).show();
-
+            if(mail.isEmpty() || password.isEmpty() || confirmPass.isEmpty()){
+                Toast.makeText(getApplicationContext(), "Lutfen tum bosluklari doldurun!", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                if(password.equals(confirmPass)){
+                    performRegistration(mail, password);
                 }
                 else{
-                    if(registerPassword.getText().toString().equals(registerPasswordConfirm.getText().toString())){
-                        performRegistration(registerEmail.getText().toString(),registerPassword.getText().toString());
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(),"Sifreler Uyusmuyor",Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getApplicationContext(),"Sifreler Uyusmuyor",Toast.LENGTH_SHORT).show();
                 }
-                progressBar.setVisibility(View.GONE);
             }
+            progressBar.setVisibility(View.GONE);
         });
-
-
     }
 
-    private void performRegistration(String mail,String password) {
-        if(isYildizMail(mail)){
-            auth.createUserWithEmailAndPassword(mail,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    User newUser = new User(mail,authResult.getUser().getUid());
+    private void performRegistration(String mail, String password) {
+        // Fetching FCM Token for the user
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.w("TAG", "Fetching FCM registration token failed", task.getException());
+                return;
+            }
 
-                    db.collection("User").document(newUser.getUid()).set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            FirebaseUser currentUser = auth.getCurrentUser();
-                            currentUser.sendEmailVerification()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(getApplicationContext(),"Hesabiniz olusturuldu mailinizi onaylayarak giris yapabilirsiniz",Toast.LENGTH_LONG).show();
+            String fcmToken = task.getResult(); // Assigning the FCM token
+            Log.d("TAG", String.format("FCM Token: %s", fcmToken));
 
-                                            } else {
-                                                Toast.makeText(getApplicationContext(),"Hesabiniz olusturulurken hata mailinize gonderilemedi" ,Toast.LENGTH_SHORT).show();
+            // Create the user in FirebaseAuth
+            auth.createUserWithEmailAndPassword(mail, password).addOnSuccessListener(authResult -> {
+                User newUser = new User(mail, authResult.getUser().getUid());
+                newUser.setFcmToken(fcmToken);  // Setting FCM token to the user object
 
-                                            }
-                                        }
-                                    });
-                            Intent intent = new Intent(RegisterActivity.this, ProfileSettings.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(),"Firestoreda sikinti"+e.getMessage(),Toast.LENGTH_LONG).show();
-
-
-                        }
-                    });
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(),"Authtta sikinti "+e.getMessage(),Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
-
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"Mailinizin @std.yildiz.edu.tr formatinda olmasi gerekmektedir!",Toast.LENGTH_SHORT).show();
-        }
-    }
-    private void addUserTodb(){
-
-    }
-    private boolean isYildizMail(String email) {
-        String emailSuffix = "@std.yildiz.edu.tr";
-
-        return email.endsWith(emailSuffix);
+                db.collection("User").document(newUser.getUid()).set(newUser).addOnSuccessListener(unused -> {
+                    FirebaseUser currentUser = auth.getCurrentUser();
+                    currentUser.sendEmailVerification()
+                            .addOnCompleteListener(task2 -> {
+                                if (task2.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "Verify your account from your mail address", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(RegisterActivity.this, ProfileSettings.class);
+                                    intent.putExtra("user", newUser);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Could not send verification to your mail address", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "An error occurred on Firestore" + e.getMessage(), Toast.LENGTH_LONG).show());
+            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "An error occurred on auth " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        });
     }
 }
+

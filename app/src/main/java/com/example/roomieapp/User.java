@@ -9,7 +9,8 @@ import androidx.core.app.NotificationCompat;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String email,UID,department,studentClass,distance,duration,status,contact,photoUrl,name;
+    private String email, uid,department,studentClass,distance,duration,status,contact,photoUrl,name;
+    private String fcmToken;
     private boolean isUserUpdated=false;
 
 
@@ -18,9 +19,9 @@ public class User implements Serializable {
 
     }
 
-    public User(String email,String UID){
+    public User(String email,String uid){
         this.email=email;
-        this.UID=UID;
+        this.uid =uid;
 
     }
     public void sendMatchRequestNotification(Context context) {
@@ -49,7 +50,7 @@ public class User implements Serializable {
         this.photoUrl=photoUrl;
     }
     public String getUid() {
-        return UID;
+        return uid;
     }
     public String getPhotoUrl() {
         return photoUrl;
@@ -82,6 +83,15 @@ public class User implements Serializable {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    // ve bir setter metod ekleyin
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.roomieapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -66,6 +67,14 @@ public class UserDetailActivity extends AppCompatActivity {
 
     // Eşleşme isteği gönderme işlemini gerçekleştir
     private void sendMatchRequest() {
-        FCMSend.pushNotification(UserDetailActivity.this, "engNqbbdSxiLhJMBJf33qK:APA91bER6WyvouOQ6PfUWN25ZSrbw3zTHy_OnwurfANeIbjzgPdgai61yrIZ_gl_XZpvO-LeECAol9b6d9eS7luIaz-sQEC9shmu7qlw-otEE70eESrruf0WFnVhlCrBSVbLdvoaaP_n", "Hello", "Hello World message");
+        // selectedUser nesnesi, şu anda görüntülemekte olduğunuz kullanıcıdır
+        // Bu nesnenin getFcmToken() metodu, bu kullanıcının FCM tokenini döndürmelidir
+        if (selectedUser != null && selectedUser.getFcmToken() != null) {
+            Log.d("TAGGG","ELSE GİRmedi");
+            FCMSend.pushNotification(UserDetailActivity.this, selectedUser.getFcmToken(), "Match Request", "You have received a match request");
+        } else {
+            Log.d("TAGGG","ELSE GİRDİ");
+        }
     }
+
 }
