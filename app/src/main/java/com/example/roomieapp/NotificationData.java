@@ -4,13 +4,15 @@ public class NotificationData {
 
     private String title;
     private String body;
+    private String senderEmail;
 
     public NotificationData() {
     }
 
-    public NotificationData(String title, String body) {
+    public NotificationData(String title, String body, String senderEmail) {
         this.title = title;
         this.body = body;
+        this.senderEmail = senderEmail;
     }
 
     public String getTitle() {
@@ -27,5 +29,13 @@ public class NotificationData {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getSenderEmail() {
+        return senderEmail;
+    }
+
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
     }
 }

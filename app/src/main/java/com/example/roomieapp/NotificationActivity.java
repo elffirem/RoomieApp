@@ -36,6 +36,7 @@ public class NotificationActivity extends AppCompatActivity {
         notificationAdapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(notificationAdapter);
 
+        // Firebase Firestore'dan bildirimleri al
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("notifications")
@@ -45,7 +46,11 @@ public class NotificationActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                NotificationData notification = document.toObject(NotificationData.class);
+                                // Firestore'dan alınan verilerle NotificationData nesnelerini oluştur
+                                String title = document.getString("title");
+                                String body = document.getString("body");
+                                String senderEmail = document.getString("senderEmail");
+                                NotificationData notification = new NotificationData(title, body, senderEmail);
                                 notificationList.add(notification);
                             }
                             notificationAdapter.notifyDataSetChanged();

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <queries>
+        <package android:name="com.whatsapp" />
+    </queries>
+    <queries>
+        <package android:name="com.google.android.gm" />
+    </queries>
 
     <uses-feature
         android:name="android.hardware.camera"

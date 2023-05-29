@@ -178,11 +178,60 @@
         </LinearLayout>
 
         <Button
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:id="@+id/send_request_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send Request" />
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="16dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/message_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/message" />
+
+                <TextView
+                    android:id="@+id/message_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Message"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/mail_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/mail" />
+
+                <TextView
+                    android:id="@+id/mail_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mail"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

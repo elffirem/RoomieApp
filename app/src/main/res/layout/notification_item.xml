@@ -24,5 +24,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         tools:text="Body" />
+    <TextView
+        android:id="@+id/senderEmail"
+        android:layout_width="0dp"
+        android:textColor="@color/brown_dark"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/body"
+        tools:text="Body" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

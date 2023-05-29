@@ -21,7 +21,7 @@ public class FCMSend {
     private static String BASE_URL="https://fcm.googleapis.com/fcm/send";
     private static String SERVER_KEY="key=AAAAzFwjRio:APA91bECQPcDIbC356b4JSWJ_tKdkQXl-ozpmG5F9MyX9jk-P10zMk0eTNWLhBDTI4z3W9rfUQN4aeDJQ5N_wEShw4t-dePJ7RmRQn0KJ1_TnBE_nPvFvnFpED95Zds5kYWgvFakiXpY";
 
-    public static void pushNotification(Context context,String token,String title,String message){
+    public static void pushNotification(Context context,String token,String title,String message, String senderEmail){
         StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -29,11 +29,20 @@ public class FCMSend {
 
         try{
             JSONObject json=new JSONObject();
-             json.put("to",token);
-             JSONObject notification=new JSONObject();
-             notification.put("title",title);
-             notification.put("body",message);
-             json.put("notification",notification);
+            json.put("to",token);
+
+            JSONObject notification=new JSONObject();
+            notification.put("title",title);
+
+            // bildirim mesajını ve senderEmail'i birleştir
+            String fullMessage = message + "\nFrom: " + senderEmail;
+            notification.put("body",fullMessage);
+
+            json.put("notification",notification);
+
+            JSONObject data=new JSONObject();
+            data.put("senderEmail", senderEmail);
+            json.put("data",data);
 
              JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST,BASE_URL,json, new Response.Listener<JSONObject>() {
                  @Override
