@@ -29,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
-            Toast.makeText(getApplicationContext(), "Zaten giris yapilmis", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Already logged in", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -60,18 +60,29 @@ public class RegisterActivity extends AppCompatActivity {
             String confirmPass = registerPasswordConfirm.getText().toString();
 
             if(mail.isEmpty() || password.isEmpty() || confirmPass.isEmpty()){
-                Toast.makeText(getApplicationContext(), "Lutfen tum bosluklari doldurun!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Fill all blanks", Toast.LENGTH_SHORT).show();
             }
             else{
-                if(password.equals(confirmPass)){
+                if(password.equals(confirmPass) && isSchoolMail(mail)){
+                    
                     performRegistration(mail, password);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"Sifreler Uyusmuyor",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"password mismatch",Toast.LENGTH_SHORT).show();
                 }
             }
             progressBar.setVisibility(View.GONE);
         });
+    }
+
+    private boolean isSchoolMail(String mail) {
+        String emailSuffix = "@std.yildiz.edu.tr";
+        if(mail.endsWith(emailSuffix)){
+            Toast.makeText(getApplicationContext(),"Verification mail is not going to send, school mail has been used",Toast.LENGTH_SHORT).show();
+            return true;
+        }else{
+            return  false;
+        }
     }
 
     private void performRegistration(String mail, String password) {

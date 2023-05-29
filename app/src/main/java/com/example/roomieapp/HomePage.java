@@ -120,13 +120,12 @@ public class HomePage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.notification) {
-            Intent intent = new Intent(this, NotificationActivity.class);
+        if (id == R.id.person) {
+            Intent intent = new Intent(this, ProfileSettings.class);
             startActivity(intent);
             return true;
 
         } else if (id == R.id.logout) {
-            // Çıkış öğesine tıklandığında yapılacak işlemler
             logout();
             return true;
         }
@@ -136,14 +135,10 @@ public class HomePage extends AppCompatActivity {
 
     public void logout() {
         FirebaseAuth.getInstance().signOut();
-        // Bu, genellikle SharedPreference veya Firebase Auth kullanılarak yapılır
-
-        // Giriş aktivitesini başlat
         Intent intent = new Intent(this, LoginActivity.class);
-        // Bu flag, geri düğmesine basıldığında bu aktiviteye geri dönülmemesi için gereklidir.
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        // Bu aktiviteyi bitir
+
         finish();
     }
 
